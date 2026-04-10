@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <!-- NuGet Package Properties -->
+    <PackageId>MeterBus.Client</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Metronix</Authors>
+    <Company>Metronix</Company>
+    <Description>A lightweight C# physical layer for M-Bus network scanning and TCP/Ethernet device bridging.</Description>
+  </PropertyGroup>
+
+</Project>

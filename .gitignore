@@ -1,0 +1,23 @@
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# System and OS Files
+.DS_Store
+Thumbs.db
+.Spotlight-V100
+.Trashes
+
+# Editor/IDE directories
+.idea/
+.vscode/
+
+# Package dependencies
+packages/
+*.nupkg
