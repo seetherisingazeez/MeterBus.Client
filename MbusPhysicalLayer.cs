@@ -12,11 +12,19 @@ namespace MeterBus.Client
     {
         private readonly MbusTcpClient _serial;
 
+        /// <summary>
+        /// Injects the underlying TcpClient mechanism which will carry the M-Bus link payload.
+        /// </summary>
+        /// <param name="serial">The instantiated wrapper for the tcp/ip serial stream.</param>
         public MbusPhysicalLayer(MbusTcpClient serial)
         {
             _serial = serial;
         }
 
+        /// <summary>
+        /// Extricates the payload writing functionality directly, letting higher layers push custom long frames.
+        /// </summary>
+        /// <param name="frame">The fully constructed raw byte frame to send.</param>
         public void WriteRaw(byte[] frame)
         {
             _serial.Write(frame);
@@ -61,6 +69,11 @@ namespace MeterBus.Client
             _serial.Write(frame);
         }
 
+        /// <summary>
+        /// Sends a REQ_UD2 Request Frame utilizing the Frame Count Bit (FCB) to toggle block retrieval
+        /// for multi-telegram answers where total meter data size exceeds standard MTU payload.
+        /// </summary>
+        /// <param name="address">Target primary address, or 253 to target selected secondary.</param>
         public void SendRequestFrameMulti(byte? address)
         {
             if (!address.HasValue) return;

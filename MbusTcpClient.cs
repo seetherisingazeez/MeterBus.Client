@@ -15,7 +15,10 @@ namespace MeterBus.Client
         private readonly int _port;
         private TcpClient? _client;
         private NetworkStream? _stream;
+        /// <summary>Timeout in milliseconds for stream read operations.</summary>
         public int ReadTimeoutMs { get; set; } = 1500;
+        
+        /// <summary>Timeout in milliseconds for stream write operations.</summary>
         public int WriteTimeoutMs { get; set; } = 1000;
 
         /// <summary>
@@ -99,6 +102,9 @@ namespace MeterBus.Client
             }
         }
 
+        /// <summary>
+        /// Disposes the underlying NetworkStream and TcpClient bindings securely terminating the Socket.
+        /// </summary>
         public void Dispose()
         {
             _stream?.Dispose();

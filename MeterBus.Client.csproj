@@ -12,6 +12,11 @@
     <Authors>Metronix</Authors>
     <Company>Metronix</Company>
     <Description>A lightweight C# physical layer for M-Bus network scanning and TCP/Ethernet device bridging.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
 </Project>
