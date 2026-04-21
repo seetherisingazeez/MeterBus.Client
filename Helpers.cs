@@ -43,14 +43,11 @@ namespace MeterBus.Client
         }
     }
 
-    public class MBusFrameException : Exception
+    public class MBusFrameException(string message) : Exception(message)
     {
-        public MBusFrameException(string message) : base(message) { }
     }
 
-    public class MBusConnectionException : Exception
+    public class MBusConnectionException(string message, Exception? innerException = null) : Exception(message, innerException)
     {
-        public MBusConnectionException(string message, Exception? innerException = null) 
-            : base(message, innerException) { }
     }
 }
