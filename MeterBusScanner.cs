@@ -16,23 +16,28 @@ namespace MeterBus.Client
         /// to discover the 16-character secondary addresses of all mapped modules.
         /// </summary>
         /// <param name="foundCallback">Optional callback triggered immediately when a new meter address is verified.</param>
+        /// <param name="progressCallback">Optional callback triggered during the scan to report the current mask being probed.</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>A list of discovered secondary addresses.</returns>
-        public List<string> ScanSecondary(Action<string>? foundCallback = null)
+        public List<string> ScanSecondary(Action<string>? foundCallback = null, Action<string>? progressCallback = null, CancellationToken cancellationToken = default)
         {
             List<string> foundAddresses = [];
-            ScanSecondaryAddressRange(0, "FFFFFFFFFFFFFFFF", foundAddresses, foundCallback);
+            ScanSecondaryAddressRange(0, "FFFFFFFFFFFFFFFF", foundAddresses, foundCallback, progressCallback, cancellationToken);
             return foundAddresses;
         }
 
-        private void ScanSecondaryAddressRange(int pos, string mask, List<string> found, Action<string>? cb)
+        private void ScanSecondaryAddressRange(int pos, string mask, List<string> found, Action<string>? cb, Action<string>? progCb, CancellationToken ct)
         {
+            if (ct.IsCancellationRequested) return;
+            if (pos >= mask.Length) return;
+
             int l_start = 0, l_end = 9;
 
             if (mask[pos] != 'F')
             {
                 if (pos < 15)
                 {
-                    ScanSecondaryAddressRange(pos + 1, mask, found, cb);
+                    ScanSecondaryAddressRange(pos + 1, mask, found, cb, progCb, ct);
                     return;
                 }
                 else
@@ -43,8 +48,11 @@ namespace MeterBus.Client
 
             for (int i = l_start; i <= l_end; i++)
             {
+                if (ct.IsCancellationRequested) return;
+
                 string newMask = string.Concat(mask.AsSpan(0, pos), i.ToString("X1"), mask.AsSpan(pos + 1));
                 
+                progCb?.Invoke(newMask);
                 var (success, matchSecondary) = ProbeSecondaryAddress(newMask);
 
                 if (success == true)
@@ -57,7 +65,7 @@ namespace MeterBus.Client
                 }
                 else if (success == false) // false means collision detected
                 {
-                    ScanSecondaryAddressRange(pos + 1, newMask, found, cb);
+                    ScanSecondaryAddressRange(pos + 1, newMask, found, cb, progCb, ct);
                 }
                 // null means timeout / no-reply, so we just continue
             }
